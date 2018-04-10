@@ -23,8 +23,6 @@ for idx in range(0,len(json_files)):
             face_feats_all[1,idx] = data['people'][1]['face_keypoints']
             pose_feats_all[1,idx] = data['people'][1]['pose_keypoints']
         except IndexError:
-            #face_feats[1][idx] = np.empty([210])
-            #pose_feats[1][idx] = np.empty([54])
             pass
 
     else:
@@ -38,9 +36,6 @@ for idx in range(0,len(json_files)):
     # more
     k = np.count_nonzero([pose_feats_all[0,idx,0:2], pose_feats_all[0,idx,2:4], pose_feats_all[0,idx,42:44], pose_feats_all[0,idx,45:47], pose_feats_all[0,idx,6:8], pose_feats_all[0,idx,15:17]])
     a = np.count_nonzero([pose_feats_all[1,idx,0:2], pose_feats_all[1,idx,2:4], pose_feats_all[1,idx,42:44], pose_feats_all[1,idx,45:47], pose_feats_all[1,idx,6:8], pose_feats_all[1,idx,15:17]])
-    #print(face_feats_all[0][idx])
-    #print(face_feats_all[1][idx])
-    
 
     if k < a:
         pose_feats_all[0,idx] = pose_feats_all[1,idx]
