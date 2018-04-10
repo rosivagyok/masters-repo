@@ -75,5 +75,9 @@ for idx in range(0,len(json_files)):
     if not np.any(pose_feats[idx][6:7]):
         pose_feats[idx,6:8] = face_feats_all[0,idx,207:209]
 
-
+# Interpolate for zero feature space elements (name is a bit misleading...)
 pose_feats_smooth = feature_smooth(pose_feats)
+
+# Calculate the rest of the feature space (distances, angles)
+for i in range(0, len(pose_feats)):
+    # Recalculate coordinates to nose origin
