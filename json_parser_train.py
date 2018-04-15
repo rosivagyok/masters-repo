@@ -137,4 +137,7 @@ for i in range(0, len(pose_feats_smooth)):
     pose_feats_smooth[i,64] = np.linalg.norm(pose_feats_smooth[i,40:42] - pose_feats_smooth[i,50:52])
     pose_feats_smooth[i,65] = np.linalg.norm(pose_feats_smooth[i,40:42] - pose_feats_smooth[i,52:54])
 
-    """ LABELS """
+""" LABELS """
+labels = np.array(sp.io.loadmat("E:\MATLAB\Project\Project\labels_pandora.mat"))
+
+test, train, gt_test, gt_train = cross_validation( pose_feats, labels)
