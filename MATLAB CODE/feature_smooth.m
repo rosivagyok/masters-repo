@@ -55,8 +55,8 @@ for j= [1:2:11 27:2:size(pose_feats,2)]
 
         %sample data from range
         a = [range(i,1) range(i,1)+1:range(i,2)]
-        b = (length(finalPathXY)/length(a))-1;
-        c = finalPathXY(b:b:length(a)*b,1:2);
+%         b = floor((length(finalPathXY)/length(a))-1);
+        c = finalPathXY(int64(floor(linspace(1,length(finalPathXY)-1,length(a)))),1:2);
 
         pose_feats(a,j:j+1) = c;
     end
