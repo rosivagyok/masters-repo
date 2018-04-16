@@ -1,10 +1,11 @@
 import json
 import os
-import numpy as np
-import scipy as sp
+import numpy as np, h5py
+import scipy.io as sp
 import pandas as pd
 from feature_smooth import feature_smooth
-from utils import angle_between
+from utils import angle_between, cross_validation
+from sklearn import svm
 
 #Load 
 path = "E:\\MATLAB\\Project\\Project\\keypoints_PAN\\"
@@ -138,6 +139,16 @@ for i in range(0, len(pose_feats_smooth)):
     pose_feats_smooth[i,65] = np.linalg.norm(pose_feats_smooth[i,40:42] - pose_feats_smooth[i,52:54])
 
 """ LABELS """
-labels = np.array(sp.io.loadmat("E:\MATLAB\Project\Project\labels_pandora.mat"))
-
+#labels = np.array(sp.loadmat("E:\MATLAB\Project\Project\labels_pandora.mat"))
+data = pd.read_excel('labels.xlsx')
+labels = np.array(data)
 test, train, gt_test, gt_train = cross_validation( pose_feats, labels)
+
+""" svm """
+clf = svm.SVC(C=0.9, cache_size=500, class_weight=None, coef0=0.0,
+    decision_function_shape='ovo', degree=3, gamma=0.00001, kernel='sigmoid',
+    max_iter=-1, probability=False, random_state=None, shrinking=True,
+    tol=0.001, verbose=True)
+clf.fit(train[0][:,:],gt_train[0,:])
+
+predictions = clf.predict( test[0][:,:])
