@@ -29,7 +29,7 @@ def cross_validation(pose_feats_smooth, labels):
     gt_train = np.zeros([4, int(np.floor(len(pose_feats_final)/4)*3)])
     test = np.zeros([4, int(np.floor(len(pose_feats_final)/4)), 66], dtype=np.float64)
     gt_test = np.zeros([4, int(np.floor(len(pose_feats_final)/4))-1])
-    gt_train_mlp = np.zeros([4, int(np.floor(len(pose_feats_final)/4)*3), 3])
+    gt_train_mlp = np.zeros([4, int(np.floor(len(pose_feats_final)/4)*3),3])
 
     """ create subsets for training """
     train[0][:,:] = np.array(pose_feats_final[0:int(np.floor(len(pose_feats_final)/4)*3),:])
@@ -59,10 +59,10 @@ def cross_validation(pose_feats_smooth, labels):
     gt_test[3,:] = np.transpose(np.array(labels[int(np.floor(len(pose_feats_final)/4)*2):int(np.floor(len(pose_feats_final)/4)*3)-1]))
 
     """ mlp """
-    #gt_train[0]['gt_train1_mlp'] = np.zeros(np.size(gt_train[0,:],0),3)
-    #gt_train[1]['gt_train2_mlp'] = np.zeros(len(gt_train_gt_train2),3)
-    #gt_train[2]['gt_train3_mlp'] = np.zeros(len(gt_train_gt_train3),3)
-    #gt_train[3]['gt_train4_mlp'] = np.zeros(len(gt_train_gt_train4),3)
+    #gt_train_mlp[0]['gt_train1_mlp'] = np.zeros(np.size(gt_train[0,:],0),3)
+    #gt_train_mlp[1]['gt_train2_mlp'] = np.zeros(len(gt_train_gt_train2),3)
+    #gt_train_mlp[2]['gt_train3_mlp'] = np.zeros(len(gt_train_gt_train3),3)
+    #gt_train_mlp[3]['gt_train4_mlp'] = np.zeros(len(gt_train_gt_train4),3)
     
     #gt_test[0]['gt_test1_mlp'] = np.zeros(len(gt_test_gt_test1),3)
     #gt_test[1]['gt_test2_mlp'] = np.zeros(len(gt_test_gt_test2),3)
