@@ -42,7 +42,7 @@ def cross_validation(pose_feats_smooth, labels):
     gt_train[2,:] = np.transpose(np.concatenate([labels[0:int(np.floor(len(pose_feats_final)/4))], labels[int(np.floor(len(pose_feats_final)/4)*2):len(pose_feats_final)-2]]))
 
     train[3][:,:] = np.concatenate([pose_feats_final[0:int(np.floor(len(pose_feats_final)/4)*2),:], pose_feats_final[int(np.floor(len(pose_feats_final)/4)*3):len(pose_feats_final)-2,:]])
-    gt_train[3,:] = np.transpose(np.concatenate([labels[0:int(np.floor(len(pose_feats_final)/4)*2)], labels[int(np.floor(len(pose_feats_final)/4)*3):len(pose_feats_final)-3]]))
+    gt_train[3,:] = np.transpose(np.concatenate([labels[0:int(np.floor(len(pose_feats_final)/4)*2)], labels[int(np.floor(len(pose_feats_final)/4)*3):len(pose_feats_final)-2]]))
 
 
     """ create subsets for testing """
