@@ -186,8 +186,8 @@ clf3 = linear_model.LogisticRegression(penalty='l2', dual=False, solver='sag',
                     intercept_scaling=1, class_weight=None, 
                     verbose=0, random_state=None, max_iter=1000)
 """
-test, train, gt_test, gt_train = parse_feats()
-clf = neural_network.MLPClassifier(solver='adam', hidden_layer_sizes=130,
+#test, train, gt_test, gt_train = parse_feats()
+"""clf = neural_network.MLPClassifier(solver='adam', hidden_layer_sizes=130,
                     tol=0.0001,
                     verbose=0, random_state=None, max_iter=220)
 
@@ -210,4 +210,4 @@ predictions = clf.predict(test[0][:,:])
 acc1 = clf.score(test[0][0:np.size(test[0][:,:],0)-1,:],gt_test[0,:])
 acc2 = clf1.score(test[1][0:np.size(test[1][:,:],0)-1,:],gt_test[1,:])
 acc3 = clf2.score(test[2][0:np.size(test[2][:,:],0)-1,:],gt_test[2,:])
-acc4 = clf3.score(test[3][0:np.size(test[3][:,:],0)-1,:],gt_test[3,:])
+acc4 = clf3.score(test[3][0:np.size(test[3][:,:],0)-1,:],gt_test[3,:])"""
