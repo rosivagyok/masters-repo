@@ -6,7 +6,7 @@ function [ pose_feats ] = feature_smooth( pose_feats )
 % load('E:\MATLAB\Project\Project\test.mat');
 
 
-pose_feats = cell2mat(pose_feats);
+%pose_feats = cell2mat(pose_feats);
 
 for j= [1:2:11 27:2:size(pose_feats,2)]
     

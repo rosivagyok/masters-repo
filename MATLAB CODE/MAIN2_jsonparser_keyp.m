@@ -1,10 +1,10 @@
 clc
 clear all
 
-myfolder = 'E:\MATLAB\Project\Project\keypoints_PAN';
+myfolder = 'E:\keypoints\full';
 b = dir([myfolder '/*.json']);
 for i=1:size(dir([myfolder '/*.json']),1)
-    listfile = loadjson(['E:\MATLAB\Project\Project\keypoints_PAN\' b(i).name]);
+    listfile = loadjson(['E:\keypoints\full\' b(i).name]);
     if ~isempty(listfile.people)
         for j=1:size(listfile.people,2)
             
