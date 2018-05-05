@@ -35,19 +35,19 @@ def cross_validation(pose_feats_smooth, labels):
     train[0][:,:] = np.array(pose_feats_final[0:int(np.floor(len(pose_feats_final)/4)*3),:])
     gt_train[0,:] = np.transpose(np.array(labels[0:int(np.floor(len(pose_feats_final)/4)*3)]))
 
-    train[1][:,:] = np.array(pose_feats_final[int(np.floor(len(pose_feats_final)/4)):len(pose_feats_final)-2,:])
-    gt_train[1,:] = np.transpose(np.array(labels[int(np.floor(len(pose_feats_final)/4)):len(pose_feats_final)-2]))
+    train[1][:,:] = np.array(pose_feats_final[int(np.floor(len(pose_feats_final)/4)):len(pose_feats_final)-1,:])
+    gt_train[1,:] = np.transpose(np.array(labels[int(np.floor(len(pose_feats_final)/4)):len(pose_feats_final)-1]))
 
-    train[2][:,:] = np.concatenate([pose_feats_final[0:int(np.floor(len(pose_feats_final)/4)),:], pose_feats_final[int(np.floor(len(pose_feats_final)/4)*2):len(pose_feats_final)-2,:]],0)
-    gt_train[2,:] = np.transpose(np.concatenate([labels[0:int(np.floor(len(pose_feats_final)/4))], labels[int(np.floor(len(pose_feats_final)/4)*2):len(pose_feats_final)-2]]))
+    train[2][:,:] = np.concatenate([pose_feats_final[0:int(np.floor(len(pose_feats_final)/4)),:], pose_feats_final[int(np.floor(len(pose_feats_final)/4)*2):len(pose_feats_final)-1,:]],0)
+    gt_train[2,:] = np.transpose(np.concatenate([labels[0:int(np.floor(len(pose_feats_final)/4))], labels[int(np.floor(len(pose_feats_final)/4)*2):len(pose_feats_final)-1]]))
 
-    train[3][:,:] = np.concatenate([pose_feats_final[0:int(np.floor(len(pose_feats_final)/4)*2),:], pose_feats_final[int(np.floor(len(pose_feats_final)/4)*3):len(pose_feats_final)-2,:]])
-    gt_train[3,:] = np.transpose(np.concatenate([labels[0:int(np.floor(len(pose_feats_final)/4)*2)], labels[int(np.floor(len(pose_feats_final)/4)*3):len(pose_feats_final)-2]]))
+    train[3][:,:] = np.concatenate([pose_feats_final[0:int(np.floor(len(pose_feats_final)/4)*2),:], pose_feats_final[int(np.floor(len(pose_feats_final)/4)*3):len(pose_feats_final)-1,:]])
+    gt_train[3,:] = np.transpose(np.concatenate([labels[0:int(np.floor(len(pose_feats_final)/4)*2)], labels[int(np.floor(len(pose_feats_final)/4)*3):len(pose_feats_final)-1]]))
 
 
     """ create subsets for testing """
-    test[0][:,:] = np.array(pose_feats_final[int(np.floor(len(pose_feats_final)/4)*3):len(pose_feats_final)-2,:])
-    gt_test[0,:] = np.transpose(np.array(labels[int(np.floor(len(pose_feats_final)/4)*3):len(pose_feats_final)-3]))
+    test[0][:,:] = np.array(pose_feats_final[int(np.floor(len(pose_feats_final)/4)*3):len(pose_feats_final)-1,:])
+    gt_test[0,:] = np.transpose(np.array(labels[int(np.floor(len(pose_feats_final)/4)*3):len(pose_feats_final)-2]))
 
     test[1][:,:] = np.array(pose_feats_final[0:int(np.floor(len(pose_feats_final)/4)),:])
     gt_test[1,:] = np.transpose(np.array(labels[0:int(np.floor(len(pose_feats_final)/4)):len(pose_feats_final)-1]))

@@ -9,7 +9,7 @@ from sklearn import svm, linear_model, neural_network
 
 def parse_feats():
     """ Load """
-    path = "E:\\MATLAB\\Project\\Project\\keypoints_PAN\\"
+    path = "E:\\keypoints\\full\\"
     json_files = os.listdir(path)
     face_feats_all = np.zeros([2, len(json_files), 210], dtype=np.float64)
     pose_feats_all = np.zeros([2, len(json_files), 54], dtype=np.float64)
@@ -141,8 +141,11 @@ def parse_feats():
 
     """ LABELS """
     #labels = np.array(sp.loadmat("E:\MATLAB\Project\Project\labels_pandora.mat"))
-    data = pd.read_excel('labels.xlsx')
+    pose_feats = pose_feats_smooth
+    data = pd.read_excel('PANDORA_ATTENTION_LABELS.xlsx')
     labels = np.array(data)
+    labels = labels[:,1]
+    #np.save('keypoints',pose_feats_smooth)
     test, train, gt_test, gt_train = cross_validation( pose_feats, labels)
 
     return test, train, gt_test, gt_train
