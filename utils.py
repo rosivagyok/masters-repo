@@ -25,11 +25,11 @@ def cross_validation(pose_feats_smooth, labels):
     """ Normalize all features """
     pose_feats_final = norm_feats(pose_feats_smooth)
 
-    train = np.zeros([4, int(np.floor(len(pose_feats_final)/4)*3), 66], dtype=np.float64)
+    train = np.zeros([4, int(np.floor(len(pose_feats_final)/4)*3), 10], dtype=np.float64)
     gt_train = np.zeros([4, int(np.floor(len(pose_feats_final)/4)*3)])
-    test = np.zeros([4, int(np.floor(len(pose_feats_final)/4)), 66], dtype=np.float64)
+    test = np.zeros([4, int(np.floor(len(pose_feats_final)/4)), 10], dtype=np.float64)
     gt_test = np.zeros([4, int(np.floor(len(pose_feats_final)/4))-1])
-    gt_train_mlp = np.zeros([4, int(np.floor(len(pose_feats_final)/4)*3),3])
+    #gt_train_mlp = np.zeros([4, int(np.floor(len(pose_feats_final)/4)*3),3])
 
     """ create subsets for training """
     train[0][:,:] = np.array(pose_feats_final[0:int(np.floor(len(pose_feats_final)/4)*3),:])
@@ -50,7 +50,7 @@ def cross_validation(pose_feats_smooth, labels):
     gt_test[0,:] = np.transpose(np.array(labels[int(np.floor(len(pose_feats_final)/4)*3):len(pose_feats_final)-2]))
 
     test[1][:,:] = np.array(pose_feats_final[0:int(np.floor(len(pose_feats_final)/4)),:])
-    gt_test[1,:] = np.transpose(np.array(labels[0:int(np.floor(len(pose_feats_final)/4)):len(pose_feats_final)-1]))
+    gt_test[1,:] = np.transpose(np.array(labels[0:int(np.floor(len(pose_feats_final)/4))-1]))
 
     test[2][:,:] = np.array(pose_feats_final[int(np.floor(len(pose_feats_final)/4)):int(np.floor(len(pose_feats_final)/4)*2),:])
     gt_test[2,:] = np.transpose(np.array(labels[int(np.floor(len(pose_feats_final)/4)):int(np.floor(len(pose_feats_final)/4)*2)-1]))

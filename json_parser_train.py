@@ -6,6 +6,7 @@ import pandas as pd
 from feature_smooth import feature_smooth
 from utils import angle_between, cross_validation
 from sklearn import svm, linear_model, neural_network
+from sklearn.decomposition import PCA
 
 def parse_feats():
     """ Load """
@@ -146,12 +147,23 @@ def parse_feats():
     labels = np.array(data)
     labels = labels[:,1]
     #np.save('keypoints',pose_feats_smooth)
+    
+   
     test, train, gt_test, gt_train = cross_validation( pose_feats, labels)
 
     return test, train, gt_test, gt_train
 
 """ svm """
+
 """
+
+pose_feats = np.load('keypoints.npy')
+
+data = pd.read_excel('PANDORA_ATTENTION_LABELS.xlsx')
+labels = np.array(data)
+labels = labels[:,1].astype(int)
+
+test, train, gt_test, gt_train = cross_validation( pose_feats, labels)
 clf = svm.LinearSVC(penalty='l2', loss='squared_hinge', dual=True, 
                     tol=0.0001, C=1.0, multi_class='ovr', fit_intercept=True, 
                     intercept_scaling=1, class_weight=None, 
@@ -170,7 +182,17 @@ clf3 = svm.LinearSVC(penalty='l2', loss='squared_hinge', dual=True,
                     intercept_scaling=1, class_weight=None, 
                     verbose=0, random_state=None, max_iter=1000)
 
-test, train, gt_test, gt_train = parse_feats()
+clf.fit(train[0][:,:],gt_train[0,:])
+clf1.fit(train[1][:,:],gt_train[1,:])
+clf2.fit(train[2][:,:],gt_train[2,:])
+clf3.fit(train[3][:,:],gt_train[3,:])
+
+acc1 = clf.score(test[0][0:np.size(test[0][:,:],0)-1,:],gt_test[0,:])
+acc2 = clf1.score(test[1][0:np.size(test[1][:,:],0)-1,:],gt_test[1,:])
+acc3 = clf2.score(test[2][0:np.size(test[2][:,:],0)-1,:],gt_test[2,:])
+acc4 = clf3.score(test[3][0:np.size(test[3][:,:],0)-1,:],gt_test[3,:])
+
+#test, train, gt_test, gt_train = parse_feats()
 clf = linear_model.LogisticRegression(penalty='l2', dual=False, solver='sag',
                     tol=0.0001, C=1.0, multi_class='ovr', fit_intercept=True, 
                     intercept_scaling=1, class_weight=None, 
@@ -188,9 +210,20 @@ clf3 = linear_model.LogisticRegression(penalty='l2', dual=False, solver='sag',
                     tol=0.0001, C=1.0, multi_class='ovr', fit_intercept=True, 
                     intercept_scaling=1, class_weight=None, 
                     verbose=0, random_state=None, max_iter=1000)
-"""
+
+clf.fit(train[0][:,:],gt_train[0,:])
+clf1.fit(train[1][:,:],gt_train[1,:])
+clf2.fit(train[2][:,:],gt_train[2,:])
+clf3.fit(train[3][:,:],gt_train[3,:])
+
+acc1 = clf.score(test[0][0:np.size(test[0][:,:],0)-1,:],gt_test[0,:])
+acc2 = clf1.score(test[1][0:np.size(test[1][:,:],0)-1,:],gt_test[1,:])
+acc3 = clf2.score(test[2][0:np.size(test[2][:,:],0)-1,:],gt_test[2,:])
+acc4 = clf3.score(test[3][0:np.size(test[3][:,:],0)-1,:],gt_test[3,:])
+
+
 #test, train, gt_test, gt_train = parse_feats()
-"""clf = neural_network.MLPClassifier(solver='adam', hidden_layer_sizes=130,
+clf = neural_network.MLPClassifier(solver='adam', hidden_layer_sizes=130,
                     tol=0.0001,
                     verbose=0, random_state=None, max_iter=220)
 
@@ -208,9 +241,8 @@ clf1.fit(train[1][:,:],gt_train[1,:])
 clf2.fit(train[2][:,:],gt_train[2,:])
 clf3.fit(train[3][:,:],gt_train[3,:])
 
-predictions = clf.predict(test[0][:,:])
-
 acc1 = clf.score(test[0][0:np.size(test[0][:,:],0)-1,:],gt_test[0,:])
 acc2 = clf1.score(test[1][0:np.size(test[1][:,:],0)-1,:],gt_test[1,:])
 acc3 = clf2.score(test[2][0:np.size(test[2][:,:],0)-1,:],gt_test[2,:])
-acc4 = clf3.score(test[3][0:np.size(test[3][:,:],0)-1,:],gt_test[3,:])"""
+acc4 = clf3.score(test[3][0:np.size(test[3][:,:],0)-1,:],gt_test[3,:])
+"""

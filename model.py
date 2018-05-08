@@ -3,26 +3,44 @@ import numpy as np
 import scipy as sp
 import keras
 from keras.models import Sequential
-from keras.layers import Dense, Dropout, Activation, Flatten
+from keras.layers import Dense, Dropout, Activation, Flatten, LSTM
 from keras.utils import np_utils
 from json_parser_train import parse_feats
 from load import load
 
-test, train, gt_test, gt_train = parse_feats()
+test, train, gt_test, gt_train = load()
 
-X_train = train[0][:,:]
-Y_train = gt_train[0,:]
-X_test = test[0][0:np.size(test[0][:,:],0)-1,:]
-Y_test = gt_test[0,:]
+X_train = train[1][:,:]
+#X_train = np.reshape(X_train,(X_train.shape[0], 1, X_train.shape[1]))
+Y_train = gt_train[1,:]
+X_test = test[1][0:np.size(test[1][:,:],0)-1,:]
+#X_test = np.reshape(X_test,(X_test.shape[0], 1, X_test.shape[1]))
+Y_test = gt_test[1,:]
 
 model = Sequential()
 
-model.add(Dense(128, input_dim=66, activation='relu')) 
-model.add(Dense(128, activation='relu'))
+"""Build a simple LSTM network. We pass the extracted features from
+        our CNN to this model predomenently."""
+# Model.
+"""model = Sequential()
+model.add(LSTM(512, return_sequences=True,
+                       input_shape=(1, 66),
+                       dropout=0.5))
+model.add(LSTM(256, dropout=0.5)) 
+model.add(Dense(256, activation='relu'))
 model.add(Dropout(0.5))
-model.add(Dense(128, activation='relu'))
-model.add(Dropout(0.5))
-model.add(Dense(128, activation='relu'))
+#model.add(Flatten())
+model.add(Dense(3, activation='softmax'))"""
+
+model.add(Dense(5, input_dim=10, activation='relu')) 
+#model.add(Dense(64, kernel_initializer='random_uniform', bias_initializer='zeros',  activation='relu'))
+#model.add(Dropout(0.5))
+#model.add(Dense(64, kernel_initializer='random_uniform', bias_initializer='zeros', activation='relu'))
+#model.add(Dropout(0.5))
+model.add(Dense(5,
+                kernel_initializer='random_uniform',
+                bias_initializer='zeros',
+                activation='relu'))
 model.add(Dropout(0.5))
 model.add(Dense(3, activation='softmax'))
 
@@ -85,11 +103,13 @@ fusion2 = keras.layers.Dense(6,activation='relu')(fusion)
 
 out = keras.layers.Dense(3, activation='softmax')(fusion2)
 model = keras.models.Model(inputs=[input1, input2, input3, input4, input5, input6], outputs=out)"""
-
+#opt = keras.optimizers.SGD(lr=0.0001)
 model.compile(loss='categorical_crossentropy',
-              optimizer='adam',
+              optimizer = keras.optimizers.Adam(lr=0.0001),
               metrics=['accuracy'])
 """model.fit([X_train[:,0:12], X_train[:,12:24], X_train[:,24:26], X_train[:,26:40], X_train[:,40:54], X_train[:,54:66]], np_utils.to_categorical(Y_train), 
          batch_size=128, nb_epoch=14,validation_data=([X_test[:,0:12], X_test[:,12:24], X_test[:,24:26], X_test[:,26:40], X_test[:,40:54], X_test[:,54:66]], np_utils.to_categorical(Y_test)),verbose=2)"""
-model.fit(X_train, np_utils.to_categorical(Y_train), 
-         batch_size=128, nb_epoch=14,validation_data=(X_test,np_utils.to_categorical(Y_test)),verbose=2)
+history = model.fit(X_train, np_utils.to_categorical(Y_train), 
+         batch_size=64, nb_epoch=2,validation_data=(),verbose=2)
+
+pred = model.predict(X_test, batch_size=32, verbose=2, steps=None)
