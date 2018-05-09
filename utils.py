@@ -25,9 +25,9 @@ def cross_validation(pose_feats_smooth, labels):
     """ Normalize all features """
     pose_feats_final = norm_feats(pose_feats_smooth)
 
-    train = np.zeros([4, int(np.floor(len(pose_feats_final)/4)*3), 10], dtype=np.float64)
+    train = np.zeros([4, int(np.floor(len(pose_feats_final)/4)*3), 66], dtype=np.float64)
     gt_train = np.zeros([4, int(np.floor(len(pose_feats_final)/4)*3)])
-    test = np.zeros([4, int(np.floor(len(pose_feats_final)/4)), 10], dtype=np.float64)
+    test = np.zeros([4, int(np.floor(len(pose_feats_final)/4)), 66], dtype=np.float64)
     gt_test = np.zeros([4, int(np.floor(len(pose_feats_final)/4))-1])
     #gt_train_mlp = np.zeros([4, int(np.floor(len(pose_feats_final)/4)*3),3])
 
@@ -58,46 +58,6 @@ def cross_validation(pose_feats_smooth, labels):
     test[3][:,:] = np.array(pose_feats_final[int(np.floor(len(pose_feats_final)/4)*2):int(np.floor(len(pose_feats_final)/4)*3),:])
     gt_test[3,:] = np.transpose(np.array(labels[int(np.floor(len(pose_feats_final)/4)*2):int(np.floor(len(pose_feats_final)/4)*3)-1]))
 
-    """ mlp """
-    #gt_train_mlp[0]['gt_train1_mlp'] = np.zeros(np.size(gt_train[0,:],0),3)
-    #gt_train_mlp[1]['gt_train2_mlp'] = np.zeros(len(gt_train_gt_train2),3)
-    #gt_train_mlp[2]['gt_train3_mlp'] = np.zeros(len(gt_train_gt_train3),3)
-    #gt_train_mlp[3]['gt_train4_mlp'] = np.zeros(len(gt_train_gt_train4),3)
-    
-    #gt_test[0]['gt_test1_mlp'] = np.zeros(len(gt_test_gt_test1),3)
-    #gt_test[1]['gt_test2_mlp'] = np.zeros(len(gt_test_gt_test2),3)
-    #gt_test[2]['gt_test3_mlp'] = np.zeros(len(gt_test_gt_test3),3)
-    #gt_test[3]['gt_test4_mlp'] = np.zeros(len(gt_test_gt_test4),3)
-    """
-    idx0[0]['sub1'] = np.where(np.all(gt_train_gt_train1 == 0, axis=1))
-    idx0[0]['sub2'] = np.where(np.all(gt_train_gt_train2 == 0, axis=1))
-    idx0[0]['sub3'] = np.where(np.all(gt_train_gt_train3 == 0, axis=1))
-    idx0[0]['sub4'] = np.where(np.all(gt_train_gt_train4 == 0, axis=1))
-    idx1[1]['sub1'] = np.where(np.all(gt_train_gt_train1 == 1, axis=1))
-    idx1[1]['sub2'] = np.where(np.all(gt_train_gt_train2 == 1, axis=1))
-    idx1[1]['sub3'] = np.where(np.all(gt_train_gt_train3 == 1, axis=1))
-    idx1[1]['sub4'] = np.where(np.all(gt_train_gt_train4 == 1, axis=1))
-    idx2[2]['sub1'] = np.where(np.all(gt_train_gt_train1 == 2, axis=1))
-    idx2[2]['sub2'] = np.where(np.all(gt_train_gt_train2 == 2, axis=1))
-    idx2[2]['sub3'] = np.where(np.all(gt_train_gt_train3 == 2, axis=1))
-    idx2[2]['sub4'] = np.where(np.all(gt_train_gt_train4 == 2, axis=1))
-
-    gt_train[0]['gt_train1_mlp'][idx0[0]['sub1'],0] = 1
-    gt_train[0]['gt_train1_mlp'][idx1[1]['sub1'],1] = 1
-    gt_train[0]['gt_train1_mlp'][idx2[2]['sub1'],2] = 1
-    
-    gt_train[1]['gt_train2_mlp'][idx1[0]['sub2'],0] = 1
-    gt_train[1]['gt_train2_mlp'][idx1[1]['sub2'],1] = 1
-    gt_train[1]['gt_train2_mlp'][idx2[2]['sub2'],2] = 1
-
-    gt_train[2]['gt_train3_mlp'][idx0[0]['sub3'],0] = 1
-    gt_train[2]['gt_train3_mlp'][idx1[1]['sub3'],1] = 1
-    gt_train[2]['gt_train3_mlp'][idx2[2]['sub3'],2] = 1
-    
-    gt_train[3]['gt_train4_mlp'][idx0[0]['sub4'],0] = 1
-    gt_train[3]['gt_train4_mlp'][idx1[1]['sub4'],1] = 1
-    gt_train[3]['gt_train4_mlp'][idx2[2]['sub4'],2] = 1
-    """
     return test, train, gt_test, gt_train
 
 def norm_feats(pose_feats_smooth):
@@ -113,3 +73,24 @@ def norm_feats(pose_feats_smooth):
     pose_feats_smooth[:,2:66] = trainsub
 
     return pose_feats_smooth
+
+def sample(pose_feats, labels):
+
+    idx0 = np.flatnonzero(labels == 0)
+    idx1 = np.flatnonzero(labels == 1)
+    idx2 = np.flatnonzero(labels == 2)
+
+    dom = np.min([len(idx0), len(idx1), len(idx2)])
+
+    n_idx0 = idx0[0:dom-2]
+    n_idx1 = idx1[0:dom-2]
+    n_idx2 = idx2[0:dom-2]
+
+    n_pose_feats0 = pose_feats[n_idx0]
+    n_pose_feats1 = pose_feats[n_idx1]
+    n_pose_feats2 = pose_feats[n_idx2]
+
+    pose_feats = np.concatenate([n_pose_feats0, n_pose_feats1, n_pose_feats2])
+    labels = np.concatenate([labels[n_idx0], labels[n_idx1], labels[n_idx2]])
+
+    return pose_feats, labels
