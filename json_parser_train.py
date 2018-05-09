@@ -3,6 +3,7 @@ import os
 import numpy as np, h5py
 import scipy.io as sp
 import pandas as pd
+from load import load
 from feature_smooth import feature_smooth
 from utils import angle_between, cross_validation
 from sklearn import svm, linear_model, neural_network
@@ -155,15 +156,10 @@ def parse_feats():
 
 """ svm """
 
-"""
 
-pose_feats = np.load('keypoints.npy')
 
-data = pd.read_excel('PANDORA_ATTENTION_LABELS.xlsx')
-labels = np.array(data)
-labels = labels[:,1].astype(int)
+"""test, train, gt_test, gt_train = load()
 
-test, train, gt_test, gt_train = cross_validation( pose_feats, labels)
 clf = svm.LinearSVC(penalty='l2', loss='squared_hinge', dual=True, 
                     tol=0.0001, C=1.0, multi_class='ovr', fit_intercept=True, 
                     intercept_scaling=1, class_weight=None, 
@@ -244,5 +240,4 @@ clf3.fit(train[3][:,:],gt_train[3,:])
 acc1 = clf.score(test[0][0:np.size(test[0][:,:],0)-1,:],gt_test[0,:])
 acc2 = clf1.score(test[1][0:np.size(test[1][:,:],0)-1,:],gt_test[1,:])
 acc3 = clf2.score(test[2][0:np.size(test[2][:,:],0)-1,:],gt_test[2,:])
-acc4 = clf3.score(test[3][0:np.size(test[3][:,:],0)-1,:],gt_test[3,:])
-"""
+acc4 = clf3.score(test[3][0:np.size(test[3][:,:],0)-1,:],gt_test[3,:])"""

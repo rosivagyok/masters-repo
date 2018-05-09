@@ -5,7 +5,7 @@ import keras
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation, Flatten, LSTM
 from keras.utils import np_utils
-from json_parser_train import parse_feats
+#from json_parser_train import parse_feats
 from load import load
 
 test, train, gt_test, gt_train = load()
@@ -121,7 +121,7 @@ model.compile(loss='categorical_crossentropy',
               optimizer = keras.optimizers.Adam(lr=0.0001),
               metrics=['accuracy'])
 model.fit([X_train[:,0:12], X_train[:,12:24], X_train[:,24:26], X_train[:,26:40], X_train[:,40:54], X_train[:,54:66]], np_utils.to_categorical(Y_train,num_classes=3), 
-         batch_size=32, nb_epoch=30,validation_data=([X_test[:,0:12], X_test[:,12:24], X_test[:,24:26], X_test[:,26:40], X_test[:,40:54], X_test[:,54:66]], np_utils.to_categorical(Y_test,num_classes=3)),verbose=2)
+         batch_size=64, nb_epoch=75,validation_data=([X_test[:,0:12], X_test[:,12:24], X_test[:,24:26], X_test[:,26:40], X_test[:,40:54], X_test[:,54:66]], np_utils.to_categorical(Y_test,num_classes=3)),verbose=2)
 """history = model.fit(X_train, np_utils.to_categorical(Y_train,num_classes=3), 
          batch_size=32, nb_epoch=30,validation_data=(X_test, np_utils.to_categorical(Y_test,num_classes=3)),verbose=2)"""
 

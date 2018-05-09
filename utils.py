@@ -1,5 +1,13 @@
 import numpy as np
 
+def randomize(pose_feats_final, labels):
+    # Generate the permutation index array.
+    permutation = np.random.permutation(pose_feats_final.shape[0])
+    # Shuffle the arrays by giving the permutation in the square brackets.
+    pose_feats_final = pose_feats_final[permutation]
+    labels = labels[permutation]
+    return pose_feats_final, labels
+
 def unit_vector(vector):
     """ Returns the unit vector of the vector.  """
     return vector / np.linalg.norm(vector)
@@ -24,6 +32,7 @@ def cross_validation(pose_feats_smooth, labels):
 
     """ Normalize all features """
     pose_feats_final = norm_feats(pose_feats_smooth)
+    pose_feats_final, labels = randomize(pose_feats_final, labels)
 
     train = np.zeros([4, int(np.floor(len(pose_feats_final)/4)*3), 66], dtype=np.float64)
     gt_train = np.zeros([4, int(np.floor(len(pose_feats_final)/4)*3)])
