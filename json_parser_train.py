@@ -4,6 +4,7 @@ import numpy as np, h5py
 import scipy.io as sp
 import pandas as pd
 from load import load
+from depth import depthlist
 from feature_smooth import feature_smooth
 from utils import angle_between, cross_validation
 from sklearn import svm, linear_model, neural_network
@@ -81,7 +82,9 @@ def parse_feats():
             pose_feats[idx,6:8] = face_feats_all[0,idx,207:209]
 
     """ Interpolate for zero feature space elements (name is a bit misleading...) """
+
     pose_feats_smooth = feature_smooth(pose_feats)
+    d_list = depthlist(pose_feats_smooth,json_files)
 
     """ Calculate the rest of the feature space (distances, angles) """
     for i in range(0, len(pose_feats_smooth)):
@@ -150,7 +153,7 @@ def parse_feats():
     #np.save('keypoints',pose_feats_smooth)
     
    
-    test, train, gt_test, gt_train = cross_validation( pose_feats, labels)
+    test, train, gt_test, gt_train = cross_validation( pose_feats, labels) #include depthlist here
 
     return test, train, gt_test, gt_train
 
