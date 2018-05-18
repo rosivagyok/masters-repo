@@ -6,10 +6,10 @@ import cv2
 """ Crop and pad depth images to 1920x1080 """
 
 # output folder
-outpath = "E:\\out\\PAN18_cropped\\" 
+outpath = "E:\\out\\PAN20-2_cropped\\" 
 
 # input folder
-path = "E:\\keypoints\\PAN18\\" 
+path = "E:\\keypoints\\PAN20-2\\" 
 
 imagelist = os.listdir(path)
 
