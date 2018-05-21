@@ -6,10 +6,10 @@ import cv2
 """ Crop and pad depth images to 1920x1080 """
 
 # output folder
-outpath = "E:\\out\\PAN20-2_cropped\\" 
+outpath = "E:\\PANDORA_DEPTH_CROPPED\\PAN20-3_cropped\\" 
 
 # input folder
-path = "E:\\keypoints\\PAN20-2\\" 
+path = "E:\\PANDORA_DEPTH_ORIGINAL\\" 
 
 imagelist = os.listdir(path)
 

@@ -13,7 +13,9 @@ from sklearn.decomposition import PCA
 def parse_feats():
     """ Load """
     path = "E:\\keypoints\\full\\"
+    path_d = "E:\\PANDORA_DEPTH_CROPPED\\full\\"
     json_files = os.listdir(path)
+    imagelist_d = os.listdir(path_d)
     face_feats_all = np.zeros([2, len(json_files), 210], dtype=np.float64)
     pose_feats_all = np.zeros([2, len(json_files), 54], dtype=np.float64)
     pose_feats = np.zeros([len(json_files), 66], dtype=np.float64)
@@ -84,7 +86,7 @@ def parse_feats():
     """ Interpolate for zero feature space elements (name is a bit misleading...) """
 
     pose_feats_smooth = feature_smooth(pose_feats)
-    d_list = depthlist(pose_feats_smooth,json_files)
+    d_list = depthlist(pose_feats_smooth,imagelist_d)
 
     """ Calculate the rest of the feature space (distances, angles) """
     for i in range(0, len(pose_feats_smooth)):
@@ -153,13 +155,13 @@ def parse_feats():
     #np.save('keypoints',pose_feats_smooth)
     
    
-    test, train, gt_test, gt_train = cross_validation( pose_feats, labels) #include depthlist here
+    test, train, gt_test, gt_train, depth_train, depth_test = cross_validation( pose_feats, d_list, labels) #include depthlist here
 
-    return test, train, gt_test, gt_train
+    return test, train, gt_test, gt_train, depth_train, depth_test
 
 """ svm """
 
-
+test, train, gt_test, gt_train, depth_train, depth_test = parse_feats()
 
 """test, train, gt_test, gt_train = load()
 
