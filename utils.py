@@ -121,6 +121,63 @@ def sample(pose_feats, d_list, labels):
 
     return pose_feats, d_list, labels
 
-"""def sample_lstm(pose_feats, d_list, labels):
+def sample_lstm( labels, shape ):
+    idx0 = np.flatnonzero(labels == 0)
+    idx1 = np.flatnonzero(labels == 1)
+    idx2 = np.flatnonzero(labels == 2)
 
-    return"""
+    dom = np.min([len(idx0), len(idx1), len(idx2)])
+
+    n_idx0 = idx0[0:dom-1]
+    n_idx1 = idx1[0:dom-1]
+    n_idx2 = idx2[0:dom-1]
+
+    labels0 = labels[idx0]
+    labels1 = labels[idx1]
+    labels2 = labels[idx2]
+
+    labels0 = labels[0:dom-1]
+    labels1 = labels[0:dom-1]
+    labels2 = labels[0:dom-1]
+
+    """ Create 0 sequences """
+    range0 = []
+    myval1 = 0
+    myval2 = 0
+    for i in range(0, n_idx0.shape[0]):
+        if i == n_idx0.shape[0] - shape - 1:
+            break
+        myval1 = idx0[i]
+        myval2 = idx0[i + shape]
+        if myval1 not in range0:
+            range0 = np.append([range0, idx0[i:i + shape]])
+
+    range0 = np.reshape(range0[0:range0.shape[0]-np.remainder(range0.shape[0],shape)],(shape,range0.shape[0]-np.remainder(range0.shape[0],shape)))
+
+    """ Create 1 sequences """
+    range1 = []
+    myval1 = 0
+    myval2 = 0
+    for i in range(0, n_idx1.shape[0]):
+        if i == n_idx1.shape[0] - shape - 1:
+            break
+        myval1 = idx1[i]
+        myval2 = idx1[i + shape]
+        if myval1 not in range1:
+            range1 = np.append([range1, idx1[i:i + shape]])     
+    range1 = np.reshape(range1[0:range1.shape[0]-np.remainder(range1.shape[0],shape)],(shape,range1.shape[0]-np.remainder(range1.shape[0],shape)))
+
+    """ Create 2 sequences """
+    range2 = []
+    myval1 = 0
+    myval2 = 0
+    for i in range(0, n_idx2.shape[0]):
+        if i == n_idx2.shape[0] - shape - 1:
+            break
+        myval1 = idx2[i]
+        myval2 = idx2[i + shape]
+        if myval1 not in range2:
+            range2 = np.append([range2, idx2[i:i + shape]])
+    range2 = np.reshape(range2[0:range2.shape[0]-np.remainder(range2.shape[0],shape)],(shape,range2.shape[0]-np.remainder(range2.shape[0],shape)))
+
+    return range0, range1, range2
