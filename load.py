@@ -18,6 +18,6 @@ def load():
         svd_solver='auto', tol=0.0, whiten=False)
     pca.fit(pose_feats_smooth)
     pose_feats = pca.transform(pose_feats_smooth)"""
-    pose_feats, d_list, labels = sample(pose_feats, d_list, labels)
+    #pose_feats, d_list, labels = sample(pose_feats, d_list, labels)
     test, train, gt_test, gt_train, depth_train, depth_test = cross_validation( pose_feats, d_list, labels)
-    return test, train, gt_test, gt_train, depth_train, depth_test, labels
+    return test, train, gt_test, gt_train, depth_train, depth_test
