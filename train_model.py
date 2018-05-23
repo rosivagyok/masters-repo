@@ -9,7 +9,7 @@ from model_load import late_DNN, early_DNN, late_LSTM, early_LSTM, evaluate, eva
 from load import load
 from utils import sample_lstm, reshape_seqlist
 
-train_label = 'lstm'
+train_label = ''
 test, train, gt_test, gt_train, depth_train, depth_test = load()
 shape = 8
 if train_label=='lstm':
@@ -28,11 +28,11 @@ else:
     X_depth_test = depth_test[1][0:test[1].shape[0]-1,:]
     Y_test = gt_test[1,:]
 
-model = early_LSTM(shape,depth_label=False)
+model = late_DNN(depth_label=True)
 
 if train_label=='lstm':
-    history, pred = evaluate_lstm(model, train, gt_train, test, 
+    history, pred, cnf_matrix = evaluate_lstm(model, train, gt_train, test, 
                             gt_test, depth_train, depth_test)
 else:
-    history, pred = evaluate(model, X_train, Y_train, X_test, 
+    history, pred, cnf_matrix = evaluate(model, X_train, Y_train, X_test, 
                             Y_test, X_depth_train, X_depth_test)

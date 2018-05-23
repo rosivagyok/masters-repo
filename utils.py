@@ -42,7 +42,7 @@ def cross_validation(pose_feats_smooth, d_list, labels):
 
     """ Normalize all features """
     pose_feats_final, d_list = norm_feats(pose_feats_smooth, d_list)
-    #pose_feats_final, d_list, labels = randomize(pose_feats_final, d_list, labels)
+    pose_feats_final, d_list, labels = randomize(pose_feats_final, d_list, labels)
 
     train = np.zeros([4, int(np.floor(len(pose_feats_final)/4)*3), 66], dtype=np.float64)
     gt_train = np.zeros([4, int(np.floor(len(pose_feats_final)/4)*3)])
@@ -50,7 +50,6 @@ def cross_validation(pose_feats_smooth, d_list, labels):
     gt_test = np.zeros([4, int(np.floor(len(pose_feats_final)/4))-1])
     depth_train = np.zeros([4, int(np.floor(len(d_list)/4)*3), 6], dtype=np.float64)
     depth_test = np.zeros([4, int(np.floor(len(d_list)/4)), 6], dtype=np.float64)
-    #gt_train_mlp = np.zeros([4, int(np.floor(len(pose_feats_final)/4)*3),3])
 
     """ create subsets for training """
     train[0][:,:] = np.array(pose_feats_final[0:int(np.floor(len(pose_feats_final)/4)*3),:])

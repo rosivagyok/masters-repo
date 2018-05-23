@@ -3,9 +3,10 @@ import numpy as np
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation, Flatten, LSTM
 from keras.utils import np_utils
+from experiments import get_cnf_mat
 
-def late_DNN():
-    depth_label = True
+def late_DNN(depth_label):
+    
     input1 = keras.layers.Input(shape=(12,))
     input2 = keras.layers.Input(shape=(12,))
     input3 = keras.layers.Input(shape=(2,))
@@ -97,7 +98,7 @@ def late_DNN():
     fusion = keras.layers.Dense(18,activation='relu')(concat)
     fusion2 = keras.layers.Dense(6,activation='relu')(fusion)
 
-    out = keras.layers.Dense(3, activation='softmax')(fusion2)
+    out = keras.layers.Dense(3, activation='softmax')(fusion)
 
     if depth_label==True:
         model = keras.models.Model(inputs=[input1, input2, input3, input4, input5, input6, input7], outputs=out)
@@ -110,8 +111,8 @@ def late_DNN():
     
     return model
 
-def early_DNN():
-    depth_label = True
+def early_DNN(depth_label):
+    
     input1 = keras.layers.Input(shape=(12,))
     input2 = keras.layers.Input(shape=(12,))
     input3 = keras.layers.Input(shape=(2,))
@@ -205,7 +206,7 @@ def early_DNN():
 
     return model
 
-def late_LSTM(shape, depth_label=False):
+def late_LSTM(shape, depth_label):
 
     input1 = keras.layers.Input(shape=(12,))
     input2 = keras.layers.Input(shape=(12,))
@@ -302,7 +303,7 @@ def late_LSTM(shape, depth_label=False):
 
     return model
 
-def early_LSTM(shape,depth_label=False):
+def early_LSTM(shape,depth_label):
 
     input1 = keras.layers.Input(shape=(shape,12,))
     input2 = keras.layers.Input(shape=(shape,12,))
@@ -412,13 +413,21 @@ def evaluate(model, X_train, Y_train, X_test, Y_test, X_depth_train, X_depth_tes
         history = model.fit([X_train[:,0:12], X_train[:,12:24], X_train[:,24:26], X_train[:,26:40], X_train[:,40:54], X_train[:,54:66], X_depth_train], np_utils.to_categorical(Y_train,num_classes=3), 
                  batch_size=32, nb_epoch=75,validation_data=([X_test[:,0:12], X_test[:,12:24], X_test[:,24:26], X_test[:,26:40], X_test[:,40:54], X_test[:,54:66], X_depth_test], np_utils.to_categorical(Y_test,num_classes=3)),verbose=2)
 
-        pred = model.predict([X_test[:,0:12], X_test[:,12:24], X_test[:,24:26], X_test[:,26:40], X_test[:,40:54], X_test[:,54:66], X_test[:,66:72], X_depth_test], batch_size=32, verbose=2, steps=None)
+        pred = model.predict([X_test[:,0:12], X_test[:,12:24], X_test[:,24:26], X_test[:,26:40], X_test[:,40:54], X_test[:,54:66], X_depth_test], batch_size=32, verbose=2, steps=None)
+        class_pred = pred.argmax(axis=-1)
+        cnf_matrix = get_cnf_mat(Y_test,class_pred)
+        #EARLY: 0.7618 0.6864
+        #LATE: 0.6612
     else:
         history = model.fit([X_train[:,0:12], X_train[:,12:24], X_train[:,24:26], X_train[:,26:40], X_train[:,40:54], X_train[:,54:66]], np_utils.to_categorical(Y_train,num_classes=3), 
                  batch_size=32, nb_epoch=75,validation_data=([X_test[:,0:12], X_test[:,12:24], X_test[:,24:26], X_test[:,26:40], X_test[:,40:54], X_test[:,54:66]], np_utils.to_categorical(Y_test,num_classes=3)),verbose=2)
 
         pred = model.predict([X_test[:,0:12], X_test[:,12:24], X_test[:,24:26], X_test[:,26:40], X_test[:,40:54], X_test[:,54:66]], batch_size=32, verbose=2, steps=None)
-    return history, pred
+        class_pred = pred.argmax(axis=-1)
+        cnf_matrix = get_cnf_mat(Y_test,class_pred)
+        #EARLY: 0.7478 0.6644
+        #LATE: 0.6506
+    return history, pred, cnf_matrix
 
 def evaluate_lstm(model, train, gt_train, test, 
                   gt_test, depth_train, depth_test):
@@ -428,11 +437,15 @@ def evaluate_lstm(model, train, gt_train, test,
                  batch_size=32, nb_epoch=75,validation_data=([test[:,:,0:12], test[:,:,12:24], test[:,:,24:26], test[:,:,26:40], test[:,:,40:54], test[:,:,54:66], depth_test], np_utils.to_categorical(gt_test,num_classes=3)),verbose=2)
         
         pred = model.predict([test[:,:,0:12], test[:,:,12:24], test[:,:,24:26], test[:,:,26:40], test[:,:,40:54], test[:,:,54:66], test[:,:,66:72], depth_test], batch_size=32, verbose=2, steps=None)
+        class_pred = pred.argmax(axis=-1)
+        cnf_matrix = get_cnf_mat(test,class_pred)
     else:
         history = model.fit([train[:,:,0:12], train[:,:,12:24], train[:,:,24:26], train[:,:,26:40], train[:,:,40:54], train[:,:,54:66]], np_utils.to_categorical(gt_train,num_classes=3), 
                  batch_size=16, nb_epoch=75,validation_data=([test[:,:,0:12], test[:,:,12:24], test[:,:,24:26], test[:,:,26:40], test[:,:,40:54], test[:,:,54:66]], np_utils.to_categorical(gt_test,num_classes=3)),verbose=2)
 
         pred = model.predict([test[:,:,0:12], test[:,:,12:24], test[:,:,24:26], test[:,:,26:40], test[:,:,40:54], test[:,:,54:66]], batch_size=32, verbose=2, steps=None)
+        class_pred = pred.argmax(axis=-1)
+        cnf_matrix = get_cnf_mat(test,class_pred)
     
-    return history, pred
+    return history, pred, cnf_matrix
 
