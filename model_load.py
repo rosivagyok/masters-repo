@@ -414,14 +414,15 @@ def simple_LSTM(shape):
     concat = keras.layers.Concatenate()([input1,input2])
 
     x1 = keras.layers.LSTM(256,return_sequences=True,
-                       input_shape=(shape, 12),
-                       recurrent_dropout=0.3,
-                       dropout=0.5)(concat)
+                            activation='tanh',
+                            input_shape=(shape, 72),
+                            recurrent_dropout=0.3,
+                            dropout=0.5)(concat)
 
     y1 = keras.layers.LSTM(256,return_sequences=False,
-                       input_shape=(shape, 12),
-                       recurrent_dropout=0.3,
-                       dropout=0.5)(x1)
+                            activation='tanh',
+                            recurrent_dropout=0.3,
+                            dropout=0.5)(x1)
 
     d1 = keras.layers.Dense(64,activation='relu')(y1)
     out = keras.layers.Dense(3, activation='softmax')(d1)
@@ -461,9 +462,8 @@ def evaluate_lstm(model, train, gt_train, test,
     
     if simple == True:
         history = model.fit([train, depth_train], np_utils.to_categorical(gt_train,num_classes=3), 
-                 batch_size=16, nb_epoch=10,validation_data=([test, depth_test], np_utils.to_categorical(gt_test,num_classes=3)),verbose=2,shuffle=False)
-        
-        pred = model.predict([test, depth_test], batch_size=32, verbose=2, steps=None)
+                 batch_size=16, nb_epoch=1,validation_data=([test, depth_test], np_utils.to_categorical(gt_test,num_classes=3)),verbose=2,shuffle=False)
+        pred = model.predict([test, depth_test], batch_size=16, verbose=2, steps=None)
         class_pred = pred.argmax(axis=-1)
         cnf_matrix = get_cnf_mat(gt_test,class_pred)
     else:

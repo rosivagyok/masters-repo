@@ -6,18 +6,19 @@ import matplotlib.pyplot as plt
 
 from sklearn import svm, datasets
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, recall_score, precision_score
 
 def get_cnf_mat(gt_test, pred):
     class_names = ['Low','Mid','High']
 
     # Compute confusion matrix
     cnf_matrix = confusion_matrix(gt_test, pred)
+
     np.set_printoptions(precision=2)
 
     # Plot non-normalized confusion matrix
     plt.figure()
-    plot_confusion_matrix(cnf_matrix, classes=class_names,
+    plot_confusion_matrix(cnf_matrix,classes=class_names,
                           title='Confusion matrix, without normalization')
 
     # Plot normalized confusion matrix
@@ -43,8 +44,9 @@ def plot_confusion_matrix(cm, classes,
         print('Confusion matrix, without normalization')# Compute confusion matrix
 
     print(cm)
-
+    
     plt.imshow(cm, interpolation='nearest', cmap=cmap)
+    
     plt.title(title)
     plt.colorbar()
     tick_marks = np.arange(len(classes))
