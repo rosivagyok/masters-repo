@@ -11,6 +11,7 @@ from sklearn import svm, linear_model, neural_network
 from sklearn.decomposition import PCA
 
 def parse_feats():
+
     """ Load """
     path = "E:\\keypoints\\full\\"
     path_d = "E:\\PANDORA_DEPTH_CROPPED\\full\\"

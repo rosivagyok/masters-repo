@@ -2,6 +2,7 @@ import numpy as np
 import scipy.ndimage
 
 def get_depth(pose_feats_points, imagelist_d):
+
     """ Get corresponding depth values of neighbours at each keypoint,
         and calculate the mean. """
 

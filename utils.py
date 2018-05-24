@@ -37,12 +37,13 @@ def angle_between(u, v):
     return np.rad2deg(np.arccos(np.clip(np.dot(v1_u, v2_u), 
                                         -1.0, 1.0)))
 
-def cross_validation(pose_feats_smooth, d_list, labels):
+def cross_validation(pose_feats_smooth, d_list, labels, train_label):
     """ Returns normalized cross validation training and test sets. """
 
     """ Normalize all features """
     pose_feats_final, d_list = norm_feats(pose_feats_smooth, d_list)
-    pose_feats_final, d_list, labels = randomize(pose_feats_final, d_list, labels)
+    if train_label=='':
+        pose_feats_final, d_list, labels = randomize(pose_feats_final, d_list, labels)
 
     train = np.zeros([4, int(np.floor(len(pose_feats_final)/4)*3), 66], dtype=np.float64)
     gt_train = np.zeros([4, int(np.floor(len(pose_feats_final)/4)*3)])

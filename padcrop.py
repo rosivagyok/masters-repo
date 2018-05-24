@@ -14,6 +14,7 @@ path = "E:\\PANDORA_DEPTH_ORIGINAL\\"
 imagelist = os.listdir(path)
 
 for i in range(0, np.size(imagelist,0)):
+
     frame = scipy.ndimage.imread(path + imagelist[i]) # load image
     frame = scipy.misc.imresize(frame, 300) # resize image by 3.0 factor
     frame = np.delete(frame, range(0,96), axis=0) # crop top and bottom rows , frame[1080:frame.shape[0]-1,:]], 

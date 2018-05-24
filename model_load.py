@@ -407,9 +407,36 @@ def early_LSTM(shape,depth_label):
 
     return model
 
-def evaluate(model, X_train, Y_train, X_test, Y_test, X_depth_train, X_depth_test):
-    depth_label=True
-    if depth_label==True:
+def simple_LSTM(shape):
+    input1 = keras.layers.Input(shape=(shape,66,))
+    input2 = keras.layers.Input(shape=(shape,6,))
+    
+    concat = keras.layers.Concatenate()([input1,input2])
+
+    x1 = keras.layers.LSTM(256,return_sequences=True,
+                       input_shape=(shape, 12),
+                       recurrent_dropout=0.3,
+                       dropout=0.5)(concat)
+
+    y1 = keras.layers.LSTM(256,return_sequences=False,
+                       input_shape=(shape, 12),
+                       recurrent_dropout=0.3,
+                       dropout=0.5)(x1)
+
+    d1 = keras.layers.Dense(64,activation='relu')(y1)
+    out = keras.layers.Dense(3, activation='softmax')(d1)
+
+    model = keras.models.Model(inputs=[input1, input2], outputs=out)
+
+    model.compile(loss='categorical_crossentropy',
+                  optimizer = keras.optimizers.Adam(lr=0.0001),
+                  metrics=['accuracy'])
+
+    return model
+
+def evaluate(model, X_train, Y_train, X_test, Y_test, X_depth_train, X_depth_test, depth_label):
+    
+    if depth_label==False:
         history = model.fit([X_train[:,0:12], X_train[:,12:24], X_train[:,24:26], X_train[:,26:40], X_train[:,40:54], X_train[:,54:66], X_depth_train], np_utils.to_categorical(Y_train,num_classes=3), 
                  batch_size=32, nb_epoch=75,validation_data=([X_test[:,0:12], X_test[:,12:24], X_test[:,24:26], X_test[:,26:40], X_test[:,40:54], X_test[:,54:66], X_depth_test], np_utils.to_categorical(Y_test,num_classes=3)),verbose=2)
 
@@ -417,7 +444,7 @@ def evaluate(model, X_train, Y_train, X_test, Y_test, X_depth_train, X_depth_tes
         class_pred = pred.argmax(axis=-1)
         cnf_matrix = get_cnf_mat(Y_test,class_pred)
         #EARLY: 0.7618 0.6864
-        #LATE: 0.6612
+        #LATE: 0.7374 0.6612
     else:
         history = model.fit([X_train[:,0:12], X_train[:,12:24], X_train[:,24:26], X_train[:,26:40], X_train[:,40:54], X_train[:,54:66]], np_utils.to_categorical(Y_train,num_classes=3), 
                  batch_size=32, nb_epoch=75,validation_data=([X_test[:,0:12], X_test[:,12:24], X_test[:,24:26], X_test[:,26:40], X_test[:,40:54], X_test[:,54:66]], np_utils.to_categorical(Y_test,num_classes=3)),verbose=2)
@@ -426,26 +453,35 @@ def evaluate(model, X_train, Y_train, X_test, Y_test, X_depth_train, X_depth_tes
         class_pred = pred.argmax(axis=-1)
         cnf_matrix = get_cnf_mat(Y_test,class_pred)
         #EARLY: 0.7478 0.6644
-        #LATE: 0.6506
+        #LATE: 0.7352 0.6506
     return history, pred, cnf_matrix
 
 def evaluate_lstm(model, train, gt_train, test, 
-                  gt_test, depth_train, depth_test):
-    depth_label=False
-    if depth_label==True:
-        history = model.fit([train[:,:,0:12], train[:,:,12:24], train[:,:,24:26], train[:,:,26:40], train[:,:,40:54], train[:,:,54:66], depth_train], np_utils.to_categorical(gt_train,num_classes=3), 
-                 batch_size=32, nb_epoch=75,validation_data=([test[:,:,0:12], test[:,:,12:24], test[:,:,24:26], test[:,:,26:40], test[:,:,40:54], test[:,:,54:66], depth_test], np_utils.to_categorical(gt_test,num_classes=3)),verbose=2)
-        
-        pred = model.predict([test[:,:,0:12], test[:,:,12:24], test[:,:,24:26], test[:,:,26:40], test[:,:,40:54], test[:,:,54:66], test[:,:,66:72], depth_test], batch_size=32, verbose=2, steps=None)
-        class_pred = pred.argmax(axis=-1)
-        cnf_matrix = get_cnf_mat(test,class_pred)
-    else:
-        history = model.fit([train[:,:,0:12], train[:,:,12:24], train[:,:,24:26], train[:,:,26:40], train[:,:,40:54], train[:,:,54:66]], np_utils.to_categorical(gt_train,num_classes=3), 
-                 batch_size=16, nb_epoch=75,validation_data=([test[:,:,0:12], test[:,:,12:24], test[:,:,24:26], test[:,:,26:40], test[:,:,40:54], test[:,:,54:66]], np_utils.to_categorical(gt_test,num_classes=3)),verbose=2)
-
-        pred = model.predict([test[:,:,0:12], test[:,:,12:24], test[:,:,24:26], test[:,:,26:40], test[:,:,40:54], test[:,:,54:66]], batch_size=32, verbose=2, steps=None)
-        class_pred = pred.argmax(axis=-1)
-        cnf_matrix = get_cnf_mat(test,class_pred)
+                  gt_test, depth_train, depth_test, depth_label, simple):
     
+    if simple == True:
+        history = model.fit([train, depth_train], np_utils.to_categorical(gt_train,num_classes=3), 
+                 batch_size=16, nb_epoch=10,validation_data=([test, depth_test], np_utils.to_categorical(gt_test,num_classes=3)),verbose=2,shuffle=False)
+        
+        pred = model.predict([test, depth_test], batch_size=32, verbose=2, steps=None)
+        class_pred = pred.argmax(axis=-1)
+        cnf_matrix = get_cnf_mat(gt_test,class_pred)
+    else:
+        if depth_label==True:
+            history = model.fit([train[:,:,0:12], train[:,:,12:24], train[:,:,24:26], train[:,:,26:40], train[:,:,40:54], train[:,:,54:66], depth_train], np_utils.to_categorical(gt_train,num_classes=3), 
+                     batch_size=32, nb_epoch=75,validation_data=([test[:,:,0:12], test[:,:,12:24], test[:,:,24:26], test[:,:,26:40], test[:,:,40:54], test[:,:,54:66], depth_test], np_utils.to_categorical(gt_test,num_classes=3)),verbose=2)
+        
+            pred = model.predict([test[:,:,0:12], test[:,:,12:24], test[:,:,24:26], test[:,:,26:40], test[:,:,40:54], test[:,:,54:66], test[:,:,66:72], depth_test], batch_size=32, verbose=2, steps=None)
+            class_pred = pred.argmax(axis=-1)
+            cnf_matrix = get_cnf_mat(gt_test,class_pred)
+        else:
+            history = model.fit([train[:,:,0:12], train[:,:,12:24], train[:,:,24:26], train[:,:,26:40], train[:,:,40:54], train[:,:,54:66]], np_utils.to_categorical(gt_train,num_classes=3), 
+                     batch_size=16, nb_epoch=75,validation_data=([test[:,:,0:12], test[:,:,12:24], test[:,:,24:26], test[:,:,26:40], test[:,:,40:54], test[:,:,54:66]], np_utils.to_categorical(gt_test,num_classes=3)),verbose=2)
+
+            pred = model.predict([test[:,:,0:12], test[:,:,12:24], test[:,:,24:26], test[:,:,26:40], test[:,:,40:54], test[:,:,54:66]], batch_size=32, verbose=2, steps=None)
+            class_pred = pred.argmax(axis=-1)
+            cnf_matrix = get_cnf_mat(gt_test,class_pred)
+
     return history, pred, cnf_matrix
+
 
