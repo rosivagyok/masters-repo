@@ -435,11 +435,10 @@ def simple_LSTM(shape):
 
     return model
 
-def early_DNN_2(shape1,shape2,shape3):
+def early_DNN2(shape0,shape1):
     
-    input1 = keras.layers.Input(shape=(shape1,))
-    input2 = keras.layers.Input(shape=(shape2,))
-    input3 = keras.layers.Input(shape=(shape3,))
+    input1 = keras.layers.Input(shape=(shape0,))
+    input2 = keras.layers.Input(shape=(shape1,))
 
     x1 = keras.layers.Dense(128,activation='relu')(input1)
     d1 = keras.layers.Dropout(0.5)(x1)
@@ -447,8 +446,6 @@ def early_DNN_2(shape1,shape2,shape3):
     x2 = keras.layers.Dense(128,activation='relu')(input2)
     d2 = keras.layers.Dropout(0.5)(x2)
 
-    x3 = keras.layers.Dense(128,activation='relu')(input3)
-    d3 = keras.layers.Dropout(0.5)(x3)
 
     y1 = keras.layers.Dense(128,activation='relu')(d1)
     d21 = keras.layers.Dropout(0.5)(y1)
@@ -456,8 +453,6 @@ def early_DNN_2(shape1,shape2,shape3):
     y2 = keras.layers.Dense(128,activation='relu')(d2)
     d22 = keras.layers.Dropout(0.5)(y2)
 
-    y3 = keras.layers.Dense(128,activation='relu')(d3)
-    d23 = keras.layers.Dropout(0.5)(y3)
 
     z1 = keras.layers.Dense(128,activation='relu')(d21)
     d31 = keras.layers.Dropout(0.5)(z1)
@@ -465,95 +460,6 @@ def early_DNN_2(shape1,shape2,shape3):
     z2 = keras.layers.Dense(128,activation='relu')(d22)
     d32 = keras.layers.Dropout(0.5)(z2)
 
-    z3 = keras.layers.Dense(128,activation='relu')(d23)
-    d33 = keras.layers.Dropout(0.5)(z3)
-
-    fusion_pre = keras.layers.Concatenate()([d31,d32,d33])
-
-    fusion = keras.layers.Dense(64,activation='relu')(fusion_pre)
-    out = keras.layers.Dense(3, activation='softmax')(fusion)
-
-    model = keras.models.Model(inputs=[input1, input2, input3], outputs=out)
-
-    model.compile(loss='categorical_crossentropy',
-                  optimizer = keras.optimizers.Adam(lr=0.0001),
-                  metrics=['accuracy'])
-
-    return model
-
-def late_DNN3(shape1, shape2, shape3):
-    
-    input1 = keras.layers.Input(shape=(shape1,))
-    input2 = keras.layers.Input(shape=(shape2,))
-    input3 = keras.layers.Input(shape=(shape3,))
-
-    x1 = keras.layers.Dense(128,activation='relu')(input1)
-    d1 = keras.layers.Dropout(0.5)(x1)
-
-    x2 = keras.layers.Dense(128,activation='relu')(input2)
-    d2 = keras.layers.Dropout(0.5)(x2)
-
-    x3 = keras.layers.Dense(128,activation='relu')(input2)
-    d3 = keras.layers.Dropout(0.5)(x2)
-
-    y1 = keras.layers.Dense(128,activation='relu')(d1)
-    d21 = keras.layers.Dropout(0.5)(y1)
-
-    y2 = keras.layers.Dense(128,activation='relu')(d2)
-    d22 = keras.layers.Dropout(0.5)(y2)
-
-    y3 = keras.layers.Dense(128,activation='relu')(d3)
-    d23 = keras.layers.Dropout(0.5)(y3)
-
-    z1 = keras.layers.Dense(128,activation='relu')(d21)
-    d31 = keras.layers.Dropout(0.5)(z1)
-    out1 = keras.layers.Dense(3, activation='softmax')(d31)
-
-    z2 = keras.layers.Dense(128,activation='relu')(d22)
-    d32 = keras.layers.Dropout(0.5)(z2)
-    out2 = keras.layers.Dense(3, activation='softmax')(d32)
-
-    z3 = keras.layers.Dense(128,activation='relu')(d23)
-    d33 = keras.layers.Dropout(0.5)(z3)
-    out3 = keras.layers.Dense(3, activation='softmax')(d33)
-
-    concat = keras.layers.Concatenate()([out1,out2,out3])
-
-    fusion = keras.layers.Dense(9,activation='relu')(concat)
-    fusion2 = keras.layers.Dense(3,activation='relu')(fusion)
-
-    out = keras.layers.Dense(3, activation='softmax')(fusion)
-    
-    model = keras.models.Model(inputs=[input1, input2, input3], outputs=out)
-
-    model.compile(loss='categorical_crossentropy',
-                  optimizer = keras.optimizers.Adam(lr=0.0001),
-                  metrics=['accuracy'])
-    
-    return model
-
-def early_DNN_2(shape1,shape2):
-    
-    input1 = keras.layers.Input(shape=(shape1,))
-    input2 = keras.layers.Input(shape=(shape2,))
-
-    x1 = keras.layers.Dense(128,activation='relu')(input1)
-    d1 = keras.layers.Dropout(0.5)(x1)
-
-    x2 = keras.layers.Dense(128,activation='relu')(input2)
-    d2 = keras.layers.Dropout(0.5)(x2)
-
-    y1 = keras.layers.Dense(128,activation='relu')(d1)
-    d21 = keras.layers.Dropout(0.5)(y1)
-
-    y2 = keras.layers.Dense(128,activation='relu')(d2)
-    d22 = keras.layers.Dropout(0.5)(y2)
-
-    z1 = keras.layers.Dense(128,activation='relu')(d21)
-    d31 = keras.layers.Dropout(0.5)(z1)
-
-    z2 = keras.layers.Dense(128,activation='relu')(d22)
-    d32 = keras.layers.Dropout(0.5)(z2)
 
     fusion_pre = keras.layers.Concatenate()([d31,d32])
 
@@ -568,10 +474,10 @@ def early_DNN_2(shape1,shape2):
 
     return model
 
-def late_DNN2(shape1,shape2):
+def late_DNN2(shape0,shape1):
     
-    input1 = keras.layers.Input(shape=(shape1,))
-    input2 = keras.layers.Input(shape=(shape2,))
+    input1 = keras.layers.Input(shape=(shape0,))
+    input2 = keras.layers.Input(shape=(shape1,))
 
 
     x1 = keras.layers.Dense(128,activation='relu')(input1)
@@ -609,14 +515,132 @@ def late_DNN2(shape1,shape2):
     
     return model
 
-def late_DNN6(shape1,shape2,shape3,shape4,shape5,shape6):
+def late_DNN4(shape0,shape1,shape2,shape3):
     
-    input1 = keras.layers.Input(shape=(shape1,))
-    input2 = keras.layers.Input(shape=(shape2,))
-    input3 = keras.layers.Input(shape=(shape3,))
-    input4 = keras.layers.Input(shape=(shape4,))
-    input5 = keras.layers.Input(shape=(shape5,))
-    input6 = keras.layers.Input(shape=(shape6,))
+    input1 = keras.layers.Input(shape=(shape0,))
+    input2 = keras.layers.Input(shape=(shape1,))
+    input3 = keras.layers.Input(shape=(shape2,))
+    input4 = keras.layers.Input(shape=(shape3,))
+
+    x1 = keras.layers.Dense(128,activation='relu')(input1)
+    d1 = keras.layers.Dropout(0.5)(x1)
+
+    x2 = keras.layers.Dense(128,activation='relu')(input2)
+    d2 = keras.layers.Dropout(0.5)(x2)
+
+    x3 = keras.layers.Dense(128,activation='relu')(input3)
+    d3 = keras.layers.Dropout(0.5)(x3)
+
+    x4 = keras.layers.Dense(128,activation='relu')(input4)
+    d4 = keras.layers.Dropout(0.5)(x4)
+
+    y1 = keras.layers.Dense(128,activation='relu')(d1)
+    d21 = keras.layers.Dropout(0.5)(y1)
+
+    y2 = keras.layers.Dense(128,activation='relu')(d2)
+    d22 = keras.layers.Dropout(0.5)(y2)
+
+    y3 = keras.layers.Dense(128,activation='relu')(d3)
+    d23 = keras.layers.Dropout(0.5)(y3)
+
+    y4 = keras.layers.Dense(128,activation='relu')(d4)
+    d24 = keras.layers.Dropout(0.5)(y4)
+
+    z1 = keras.layers.Dense(128,activation='relu')(d21)
+    d31 = keras.layers.Dropout(0.5)(z1)
+    out1 = keras.layers.Dense(3, activation='softmax')(d31)
+
+    z2 = keras.layers.Dense(128,activation='relu')(d22)
+    d32 = keras.layers.Dropout(0.5)(z2)
+    out2 = keras.layers.Dense(3, activation='softmax')(d32)
+
+    z3 = keras.layers.Dense(128,activation='relu')(d23)
+    d33 = keras.layers.Dropout(0.5)(z3)
+    out3 = keras.layers.Dense(3, activation='softmax')(d33)
+
+    z4 = keras.layers.Dense(128,activation='relu')(d24)
+    d34 = keras.layers.Dropout(0.5)(z4)
+    out4 = keras.layers.Dense(3, activation='softmax')(d34)
+
+    concat = keras.layers.Concatenate()([out1,out2,out3,out4])
+
+    fusion = keras.layers.Dense(12,activation='relu')(concat)
+    fusion2 = keras.layers.Dense(4,activation='relu')(fusion)
+
+    out = keras.layers.Dense(3, activation='softmax')(fusion)
+    
+    model = keras.models.Model(inputs=[input1, input2, input3, input4], outputs=out)
+
+    model.compile(loss='categorical_crossentropy',
+                  optimizer = keras.optimizers.Adam(lr=0.0001),
+                  metrics=['accuracy'])
+    
+    return model
+
+def early_DNN4(shape0,shape1,shape2,shape3):
+    
+    input1 = keras.layers.Input(shape=(shape0,))
+    input2 = keras.layers.Input(shape=(shape1,))
+    input3 = keras.layers.Input(shape=(shape2,))
+    input4 = keras.layers.Input(shape=(shape3,))
+
+    x1 = keras.layers.Dense(128,activation='relu')(input1)
+    d1 = keras.layers.Dropout(0.5)(x1)
+
+    x2 = keras.layers.Dense(128,activation='relu')(input2)
+    d2 = keras.layers.Dropout(0.5)(x2)
+
+    x3 = keras.layers.Dense(128,activation='relu')(input3)
+    d3 = keras.layers.Dropout(0.5)(x3)
+
+    x4 = keras.layers.Dense(128,activation='relu')(input4)
+    d4 = keras.layers.Dropout(0.5)(x4)
+
+    y1 = keras.layers.Dense(128,activation='relu')(d1)
+    d21 = keras.layers.Dropout(0.5)(y1)
+
+    y2 = keras.layers.Dense(128,activation='relu')(d2)
+    d22 = keras.layers.Dropout(0.5)(y2)
+
+    y3 = keras.layers.Dense(128,activation='relu')(d3)
+    d23 = keras.layers.Dropout(0.5)(y3)
+
+    y4 = keras.layers.Dense(128,activation='relu')(d4)
+    d24 = keras.layers.Dropout(0.5)(y4)
+
+    z1 = keras.layers.Dense(128,activation='relu')(d21)
+    d31 = keras.layers.Dropout(0.5)(z1)
+
+    z2 = keras.layers.Dense(128,activation='relu')(d22)
+    d32 = keras.layers.Dropout(0.5)(z2)
+
+    z3 = keras.layers.Dense(128,activation='relu')(d23)
+    d33 = keras.layers.Dropout(0.5)(z3)
+
+    z4 = keras.layers.Dense(128,activation='relu')(d24)
+    d34 = keras.layers.Dropout(0.5)(z4)
+
+    fusion_pre = keras.layers.Concatenate()([d31,d32,d33,d34])
+
+    fusion = keras.layers.Dense(64,activation='relu')(fusion_pre)
+    out = keras.layers.Dense(3, activation='softmax')(fusion)
+
+    model = keras.models.Model(inputs=[input1, input2, input3, input4], outputs=out)
+
+    model.compile(loss='categorical_crossentropy',
+                  optimizer = keras.optimizers.Adam(lr=0.0001),
+                  metrics=['accuracy'])
+
+    return model
+
+def late_DNN6(shape0,shape1,shape2,shape3,shape4,shape5):
+    
+    input1 = keras.layers.Input(shape=(shape0,))
+    input2 = keras.layers.Input(shape=(shape1,))
+    input3 = keras.layers.Input(shape=(shape2,))
+    input4 = keras.layers.Input(shape=(shape3,))
+    input5 = keras.layers.Input(shape=(shape4,))
+    input6 = keras.layers.Input(shape=(shape5,))
 
 
     x1 = keras.layers.Dense(128,activation='relu')(input1)
@@ -697,14 +721,14 @@ def late_DNN6(shape1,shape2,shape3,shape4,shape5,shape6):
     
     return model
 
-def early_DNN6(shape1,shape2,shape3,shape4,shape5,shape6):
+def early_DNN6(shape0,shape1,shape2,shape3,shape4,shape5):
     
-    input1 = keras.layers.Input(shape=(shape1,))
-    input2 = keras.layers.Input(shape=(shape2,))
-    input3 = keras.layers.Input(shape=(shape3,))
-    input4 = keras.layers.Input(shape=(shape4,))
-    input5 = keras.layers.Input(shape=(shape5,))
-    input6 = keras.layers.Input(shape=(shape6,))
+    input1 = keras.layers.Input(shape=(shape0,))
+    input2 = keras.layers.Input(shape=(shape1,))
+    input3 = keras.layers.Input(shape=(shape2,))
+    input4 = keras.layers.Input(shape=(shape3,))
+    input5 = keras.layers.Input(shape=(shape4,))
+    input6 = keras.layers.Input(shape=(shape5,))
 
     x1 = keras.layers.Dense(128,activation='relu')(input1)
     d1 = keras.layers.Dropout(0.5)(x1)
@@ -824,35 +848,51 @@ def evaluate_lstm(model, train, gt_train, test,
 
     return history, pred, cnf_matrix
 
-def evaluate_flexible(model, X_train, Y_train, X_test, Y_test, X_depth_train, X_depth_test, modelshape, shape0=None, shape1=None, shape2=None, shape3=None, shape4=None, shape5=None):
+def evaluate_flexible(model, X_train, Y_train, X_test, Y_test, X_depth_train, X_depth_test, modelshape):
     
     if modelshape==2:
-        history = model.fit([X_train[:,shape0], X_train[:,shape1]], np_utils.to_categorical(Y_train,num_classes=3), 
-                 batch_size=32, nb_epoch=75,validation_data=([X_test[:,shape0], X_test[:,shape1]], np_utils.to_categorical(Y_test,num_classes=3)),verbose=2)
+        history = model.fit([X_train, X_depth_train], np_utils.to_categorical(Y_train,num_classes=3), 
+                 batch_size=32, nb_epoch=75,validation_data=([X_test, X_depth_test], np_utils.to_categorical(Y_test,num_classes=3)),verbose=2)
 
-        pred = model.predict([X_test[:,shape0], X_test[:,shape1]], batch_size=32, verbose=2, steps=None)
+        pred = model.predict([X_test, X_depth_test], batch_size=32, verbose=2, steps=None)
         class_pred = pred.argmax(axis=-1)
         cnf_matrix = get_cnf_mat(Y_test,class_pred)
-        #EARLY: 
-        #LATE: 
-    elif modelshape==3:
-        history = model.fit([X_train[:,shape0], X_train[:,shape1], X_train[:,shape2]], np_utils.to_categorical(Y_train,num_classes=3), 
-                 batch_size=32, nb_epoch=75,validation_data=([X_test[:,shape0], X_test[:,shape1], X_test[:,shape2]], np_utils.to_categorical(Y_test,num_classes=3)),verbose=2)
+        #EARLY: 0.6564
+        #LATE: 0.6079
+    elif modelshape==4:
+        history = model.fit([np.concatenate([X_train[:,0:12], X_train[:,26:54]],1), np.concatenate([X_train[:,12:24], X_train[:,54:66]],1),X_train[:,24:26],X_depth_train], np_utils.to_categorical(Y_train,num_classes=3), 
+                 batch_size=32, nb_epoch=75,validation_data=([np.concatenate([X_test[:,0:12], X_test[:,26:54]],1), np.concatenate([X_test[:,12:24], X_test[:,54:66]],1),X_test[:,24:26],X_depth_test], np_utils.to_categorical(Y_test,num_classes=3)),verbose=2)
 
-        pred = model.predict([X_test[:,shape0], X_test[:,shape1], X_test[:,shape2]], batch_size=32, verbose=2, steps=None)
+        pred = model.predict([np.concatenate([X_test[:,0:12], X_test[:,26:54]],1), np.concatenate([X_test[:,12:24], X_test[:,54:66]],1),X_test[:,24:26],X_depth_test], batch_size=32, verbose=2, steps=None)
         class_pred = pred.argmax(axis=-1)
         cnf_matrix = get_cnf_mat(Y_test,class_pred)
-        #EARLY: 
-        #LATE: 
+        #EARLY: 0.6827
+        #LATE: 0.6700
     elif modelshape==6:
-        history = model.fit([X_train[:,shape0], X_train[:,shape1], X_train[:,shape2], X_train[:,shape3], X_train[:,shape4], X_train[:,shape5]], np_utils.to_categorical(Y_train,num_classes=3), 
-                 batch_size=32, nb_epoch=75,validation_data=([X_test[:,shape0], X_test[:,shape1], X_test[:,shape2], X_test[:,shape3], X_test[:,shape4], X_test[:,shape5]], 
+        history = model.fit([np.concatenate([X_train[:,0:2], X_train[:,12:14],X_depth_train[:,0:1]],1), 
+                             np.concatenate([X_train[:,2:4], X_train[:,15:18], X_train[:,24:26],X_depth_train[:,1:2]],1),
+                              np.concatenate([X_train[:,4:6],X_train[:,14:15],X_train[:,26:40],X_train[:,54:60],X_depth_train[:,2:3]],1),
+                              np.concatenate([X_train[:,6:8],X_train[:,14:15],X_train[:,40:54],X_train[:,60:66],X_depth_train[:,3:4]],1),
+                               np.concatenate([X_train[:,8:10],X_train[:,18:21],X_depth_train[:,4:5]],1),
+                                 np.concatenate([X_train[:,10:12],X_train[:,21:24],X_depth_train[:,5:6]],1)], 
+                            np_utils.to_categorical(Y_train,num_classes=3), 
+                 batch_size=32, nb_epoch=75,validation_data=([np.concatenate([X_test[:,0:2], X_test[:,12:14],X_depth_test[:,0:1]],1), 
+                             np.concatenate([X_test[:,2:4], X_test[:,15:18], X_test[:,24:26],X_depth_test[:,1:2]],1),
+                              np.concatenate([X_test[:,4:6],X_test[:,14:15],X_test[:,26:40],X_test[:,54:60],X_depth_test[:,2:3]],1),
+                              np.concatenate([X_test[:,6:8],X_test[:,14:15],X_test[:,40:54],X_test[:,60:66],X_depth_test[:,3:4]],1),
+                               np.concatenate([X_test[:,8:10],X_test[:,18:21],X_depth_test[:,4:5]],1),
+                                 np.concatenate([X_test[:,10:12],X_test[:,21:24],X_depth_test[:,5:6]],1)], 
                                                              np_utils.to_categorical(Y_test,num_classes=3)),verbose=2)
 
-        pred = model.predict([X_test[:,shape0], X_test[:,shape1], X_test[:,shape2], X_test[:,shape3], X_test[:,shape4], X_test[:,shape5]], batch_size=32, verbose=2, steps=None)
+        pred = model.predict([np.concatenate([X_test[:,0:2], X_test[:,12:14],X_depth_test[:,0:1]],1), 
+                             np.concatenate([X_test[:,2:4], X_test[:,15:18], X_test[:,24:26],X_depth_test[:,1:2]],1),
+                              np.concatenate([X_test[:,4:6],X_test[:,14:15],X_test[:,26:40],X_test[:,54:60],X_depth_test[:,2:3]],1),
+                              np.concatenate([X_test[:,6:8],X_test[:,14:15],X_test[:,40:54],X_test[:,60:66],X_depth_test[:,3:4]],1),
+                               np.concatenate([X_test[:,8:10],X_test[:,18:21],X_depth_test[:,4:5]],1),
+                                 np.concatenate([X_test[:,10:12],X_test[:,21:24],X_depth_test[:,5:6]],1)], batch_size=32, verbose=2, steps=None)
         class_pred = pred.argmax(axis=-1)
         cnf_matrix = get_cnf_mat(Y_test,class_pred)
-        #EARLY: 
-        #LATE: 
+        #EARLY: 0.6885
+        #LATE: 0.6309
 
     return history, pred, cnf_matrix
