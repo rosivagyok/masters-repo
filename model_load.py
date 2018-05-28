@@ -388,7 +388,7 @@ def early_LSTM(shape,depth_label):
                        recurrent_dropout=0.3,
                        dropout=0.5)(x7)
         d7 = keras.layers.Dense(128,activation='relu')(y7)
-        fusion_pre = keras.layers.Concatenate(64,activation='relu')([d1,d2,d3,d4,d5,d6,d7])
+        fusion_pre = keras.layers.Concatenate()([d1,d2,d3,d4,d5,d6,d7])
     else:
         fusion_pre = keras.layers.Concatenate()([d1,d2,d3,d4,d5,d6])
 
@@ -826,7 +826,7 @@ def evaluate_lstm(model, train, gt_train, test,
     
     if simple == True:
         history = model.fit([train, depth_train], np_utils.to_categorical(gt_train,num_classes=3), 
-                 batch_size=16, nb_epoch=1,validation_data=([test, depth_test], np_utils.to_categorical(gt_test,num_classes=3)),verbose=2,shuffle=False)
+                 batch_size=16, nb_epoch=75,validation_data=([test, depth_test], np_utils.to_categorical(gt_test,num_classes=3)),verbose=2,shuffle=True)
         pred = model.predict([test, depth_test], batch_size=16, verbose=2, steps=None)
         class_pred = pred.argmax(axis=-1)
         cnf_matrix = get_cnf_mat(gt_test,class_pred)
@@ -852,7 +852,7 @@ def evaluate_flexible(model, X_train, Y_train, X_test, Y_test, X_depth_train, X_
     
     if modelshape==2:
         history = model.fit([X_train, X_depth_train], np_utils.to_categorical(Y_train,num_classes=3), 
-                 batch_size=32, nb_epoch=75,validation_data=([X_test, X_depth_test], np_utils.to_categorical(Y_test,num_classes=3)),verbose=2)
+                 batch_size=32, nb_epoch=150,validation_data=([X_test, X_depth_test], np_utils.to_categorical(Y_test,num_classes=3)),verbose=2)
 
         pred = model.predict([X_test, X_depth_test], batch_size=32, verbose=2, steps=None)
         class_pred = pred.argmax(axis=-1)
