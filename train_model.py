@@ -36,7 +36,7 @@ X_test = np.reshape(test[1][0:test[1].shape[0]-1,:],[test[1][0:test[1].shape[0]-
 X_depth_test = np.reshape(depth_test[1][0:depth_test[1].shape[0]-1,:],[depth_test[1][0:depth_test[1].shape[0]-1,:].shape[0],shape,depth_test[1][0:depth_test[1].shape[0]-1,:].shape[1]])
 Y_test = gt_test[1]"""
 
-shape0 = 44
+shape0 = 38
 shape1 = 6
 """shape2 = 24
 shape3 = 24

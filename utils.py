@@ -47,12 +47,12 @@ def cross_validation(pose_feats_smooth, d_list, labels, train_label):
     if train_label=='':
         pose_feats_final, d_list, labels = randomize(pose_feats_final, d_list, labels)
 
-    pca_trafo(pose_feats_final,comp=44)
+    pca_trafo(pose_feats_final,comp=66)
     """pca_trafo(pose_feats_final,comp=8)
     pca_trafo(pose_feats_final,comp=6)
     pca_trafo(pose_feats_final,comp=4)
     pca_trafo(pose_feats_final,comp=2)"""
-    model1 = PCA(n_components=44, copy=True, whiten=False, svd_solver='auto', tol=0.0, iterated_power='auto', random_state=None)
+    model1 = PCA(n_components=38, copy=True, whiten=False, svd_solver='auto', tol=0.0, iterated_power='auto', random_state=None)
     pose_feats_final = model1.fit_transform(pose_feats_final)
 
     """train = np.zeros([4, int(np.floor(len(pose_feats_final)/4)*3), 66], dtype=np.float64)
@@ -62,9 +62,9 @@ def cross_validation(pose_feats_smooth, d_list, labels, train_label):
     depth_train = np.zeros([4, int(np.floor(len(d_list)/4)*3), 6], dtype=np.float64)
     depth_test = np.zeros([4, int(np.floor(len(d_list)/4)), 6], dtype=np.float64)"""
 
-    train = np.zeros([4, int(np.floor(len(pose_feats_final)/4)*3), 44], dtype=np.float64) #Y axes!!!!!
+    train = np.zeros([4, int(np.floor(len(pose_feats_final)/4)*3), 38], dtype=np.float64) #Y axes!!!!!
     gt_train = np.zeros([4, int(np.floor(len(pose_feats_final)/4)*3)])
-    test = np.zeros([4, int(np.floor(len(pose_feats_final)/4)), 44], dtype=np.float64)
+    test = np.zeros([4, int(np.floor(len(pose_feats_final)/4)), 38], dtype=np.float64)
     gt_test = np.zeros([4, int(np.floor(len(pose_feats_final)/4))-1])
     depth_train = np.zeros([4, int(np.floor(len(d_list)/4)*3), 6], dtype=np.float64)
     depth_test = np.zeros([4, int(np.floor(len(d_list)/4)), 6], dtype=np.float64)
