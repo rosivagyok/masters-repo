@@ -13,9 +13,11 @@
 3) Copy the PANDORA .json keypoint files from the server, located in /srv/data/shared/PANDORA/KEYPOINTS/ to ./PANDORA_keypoints/
 
 IF you want to run depth extraction:
+
 4) Copy the PANDORA depth images from the server, located in /srv/data/shared/PANDORA/DEPTH/ to ./PANDORA_depth/
 
 IF not:
+
 4) Move the file from ./PANDORA_depth/Pre/ to ./PANDORA_features/
 
 
